@@ -87,26 +87,27 @@ function showLoading() {
 async function analyzeDecision(situation, options) {
     const optionsList = options.map((opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`).join('\n');
 
-    const prompt = `You are an expert decision advisor using the Regret Minimization Framework (popularized by Jeff Bezos). 
+    const prompt = `You're a chill friend helping someone make a decision they won't regret. Use the Regret Minimization idea - imagine looking back at 80 years old.
 
-A user is facing this decision:
+Their situation:
 "${situation}"
 
-Their options are:
+Options:
 ${optionsList}
 
-Analyze each option through the lens of FUTURE REGRET - not what feels best now, but what they'll be most at peace with later. Consider:
-- What would they regret NOT doing when they're 80?
-- Which choice aligns with their authentic self?
-- What are the long-term emotional consequences?
-- Which option minimizes the "what if" feeling?
+Think about:
+- What would they kick themselves for NOT trying?
+- Which feels more "them"?
+- What's the "what if" factor?
 
-Respond in this exact JSON format (no markdown, just pure JSON):
+Be casual, warm, and real - like a friend giving honest advice. No corporate speak!
+
+Reply in this exact JSON format (no markdown, just JSON):
 {
     "recommendation": {
-        "option": "The letter of the recommended option (A, B, or C)",
-        "title": "The name of the recommended option",
-        "reason": "A compelling 2-3 sentence explanation of why this minimizes future regret"
+        "option": "A or B or C",
+        "title": "the option name",
+        "reason": "2-3 casual sentences explaining why - talk like a friend, not a robot"
     },
     "analysis": [
         {
@@ -114,14 +115,14 @@ Respond in this exact JSON format (no markdown, just pure JSON):
             "title": "Option name",
             "regretRisk": "low|medium|high",
             "regretPercentage": 25,
-            "summary": "1-2 sentence analysis of regret potential",
-            "pros": ["pro 1", "pro 2"],
-            "cons": ["con 1", "con 2"]
+            "summary": "1-2 casual sentences about regret potential",
+            "pros": ["short friendly pro", "another pro"],
+            "cons": ["honest con", "another con"]
         }
     ]
 }
 
-Important: regretPercentage should reflect likelihood of future regret (lower is better). Be thoughtful and nuanced. Return ONLY valid JSON, no other text.`;
+Keep it real and human. No fancy words. Return ONLY valid JSON.`;
 
     try {
         const response = await puter.ai.chat(prompt);
