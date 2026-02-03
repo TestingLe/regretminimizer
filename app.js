@@ -30,7 +30,7 @@ let tipInterval;
 function init() {
     decisionForm.addEventListener('submit', handleSubmit);
     newDecisionBtn.addEventListener('click', resetToInput);
-    
+
     // Add focus effects to optional option
     const option3 = document.getElementById('option3');
     option3.addEventListener('focus', () => {
@@ -41,23 +41,23 @@ function init() {
 // Handle form submission
 async function handleSubmit(e) {
     e.preventDefault();
-    
+
     const situation = document.getElementById('situation').value.trim();
     const option1 = document.getElementById('option1').value.trim();
     const option2 = document.getElementById('option2').value.trim();
     const option3 = document.getElementById('option3').value.trim();
-    
+
     if (!situation || !option1 || !option2) {
         alert('Please fill in your decision and at least two options.');
         return;
     }
-    
+
     const options = [option1, option2];
     if (option3) options.push(option3);
-    
+
     // Show loading state
     showLoading();
-    
+
     try {
         const analysis = await analyzeDecision(situation, options);
         showResults(analysis, options);
@@ -72,7 +72,7 @@ function showLoading() {
     inputSection.style.display = 'none';
     loadingSection.style.display = 'block';
     resultsSection.style.display = 'none';
-    
+
     // Rotate loading tips
     let tipIndex = 0;
     loadingTip.textContent = loadingTips[tipIndex];
@@ -89,7 +89,7 @@ function showLoading() {
 // Analyze decision using Gemini API
 async function analyzeDecision(situation, options) {
     const optionsList = options.map((opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`).join('\n');
-    
+
     const prompt = `You are an expert decision advisor using the Regret Minimization Framework (popularized by Jeff Bezos). 
 
 A user is facing this decision:
@@ -147,18 +147,35 @@ Important: regretPercentage should reflect likelihood of future regret (lower is
 
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error?.message || 'Failed to analyze decision. Please try again.');
+        throw new Error(errorData.error?.message || `API Error: ${response.status}. Please try again.`);
     }
 
     const data = await response.json();
-    const content = data.choices[0].message.content;
-    
+    console.log('API Response:', data); // Debug log
+
+    // Handle different response formats
+    let content;
+    if (data.choices && data.choices[0] && data.choices[0].message) {
+        content = data.choices[0].message.content;
+    } else if (data.response) {
+        content = data.response;
+    } else if (data.content) {
+        content = data.content;
+    } else if (data.text) {
+        content = data.text;
+    } else if (typeof data === 'string') {
+        content = data;
+    } else {
+        console.error('Unexpected API response format:', data);
+        throw new Error('Unexpected API response format. Please try again.');
+    }
+
     // Parse JSON from response (handle potential markdown wrapping)
     let jsonStr = content;
     if (content.includes('```')) {
         jsonStr = content.replace(/```json?\n?/g, '').replace(/```/g, '').trim();
     }
-    
+
     try {
         return JSON.parse(jsonStr);
     } catch (parseError) {
@@ -170,13 +187,13 @@ Important: regretPercentage should reflect likelihood of future regret (lower is
 // Show results
 function showResults(analysis, options) {
     clearInterval(tipInterval);
-    
+
     loadingSection.style.display = 'none';
     resultsSection.style.display = 'block';
     resultsSection.classList.add('fadeIn');
-    
+
     const { recommendation, analysis: optionAnalysis } = analysis;
-    
+
     let html = `
         <div class="recommendation-card">
             <div class="recommendation-label">
@@ -190,11 +207,11 @@ function showResults(analysis, options) {
         <div class="options-analysis">
             <h4 class="options-analysis-title">Detailed Analysis</h4>
     `;
-    
+
     optionAnalysis.forEach((opt, index) => {
         const isRecommended = opt.option === recommendation.option;
         const riskClass = opt.regretRisk.toLowerCase();
-        
+
         html += `
             <div class="option-card ${isRecommended ? 'recommended' : ''}">
                 <div class="option-header">
@@ -224,10 +241,10 @@ function showResults(analysis, options) {
             </div>
         `;
     });
-    
+
     html += '</div>';
     resultsContent.innerHTML = html;
-    
+
     // Animate regret bars
     setTimeout(() => {
         document.querySelectorAll('.regret-bar-fill').forEach(bar => {
@@ -241,7 +258,7 @@ function showError(message) {
     clearInterval(tipInterval);
     loadingSection.style.display = 'none';
     inputSection.style.display = 'block';
-    
+
     alert(`Error: ${message}\n\nPlease try again.`);
 }
 
@@ -251,10 +268,10 @@ function resetToInput() {
     resultsSection.classList.remove('fadeIn');
     inputSection.style.display = 'block';
     inputSection.classList.add('fadeIn');
-    
+
     // Clear form
     decisionForm.reset();
-    
+
     // Remove fadeIn class after animation
     setTimeout(() => {
         inputSection.classList.remove('fadeIn');
