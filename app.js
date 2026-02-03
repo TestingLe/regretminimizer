@@ -126,19 +126,33 @@ Important: regretPercentage should reflect likelihood of future regret (lower is
     try {
         const response = await puter.ai.chat(prompt);
         console.log('Puter AI Response:', response);
+        console.log('Response type:', typeof response);
 
-        let content = response;
+        let content;
 
-        // Handle if response is an object with text property
-        if (typeof response === 'object' && response.text) {
-            content = response.text;
-        } else if (typeof response === 'object' && response.message) {
-            content = response.message;
+        // Puter.js returns different formats - handle all cases
+        if (typeof response === 'string') {
+            content = response;
+        } else if (response && typeof response === 'object') {
+            // Try different possible properties
+            content = response.text ||
+                response.message?.content ||
+                response.message ||
+                response.content ||
+                response.result ||
+                (response.choices && response.choices[0]?.message?.content) ||
+                JSON.stringify(response);
+            console.log('Extracted content:', content);
+        }
+
+        if (!content || typeof content !== 'string') {
+            console.error('Could not extract string content from response');
+            throw new Error('Invalid AI response format');
         }
 
         // Parse JSON from response (handle potential markdown wrapping)
         let jsonStr = content;
-        if (typeof content === 'string' && content.includes('```')) {
+        if (content.includes('```')) {
             jsonStr = content.replace(/```json?\n?/g, '').replace(/```/g, '').trim();
         }
 
