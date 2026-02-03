@@ -133,7 +133,7 @@ Important: regretPercentage should reflect likelihood of future regret (lower is
             'Authorization': `Bearer ${API_KEY}`
         },
         body: JSON.stringify({
-            model: 'gemini-1.5-flash',
+            model: 'gpt-4o',
             messages: [
                 {
                     role: 'user',
