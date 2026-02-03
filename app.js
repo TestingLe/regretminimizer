@@ -1,8 +1,5 @@
 // Regret Minimizer - AI-powered decision analysis
-// Using Gemini API via apifree.ai
-
-const API_KEY = 'sk-pFEPR6A37dSjeaG00CYZpMfsyMMCd';
-const API_URL = 'https://api.apifree.ai/v1/chat/completions';
+// Using Puter.js for AI
 
 // DOM Elements
 const inputSection = document.getElementById('inputSection');
@@ -86,7 +83,7 @@ function showLoading() {
     }, 2500);
 }
 
-// Analyze decision using Gemini API
+// Analyze decision using Puter.js AI
 async function analyzeDecision(situation, options) {
     const optionsList = options.map((opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`).join('\n');
 
@@ -124,63 +121,36 @@ Respond in this exact JSON format (no markdown, just pure JSON):
     ]
 }
 
-Important: regretPercentage should reflect likelihood of future regret (lower is better). Be thoughtful and nuanced.`;
-
-    const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_KEY}`
-        },
-        body: JSON.stringify({
-            model: 'gpt-4o',
-            messages: [
-                {
-                    role: 'user',
-                    content: prompt
-                }
-            ],
-            temperature: 0.7,
-            max_tokens: 1500
-        })
-    });
-
-    if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error?.message || `API Error: ${response.status}. Please try again.`);
-    }
-
-    const data = await response.json();
-    console.log('API Response:', data); // Debug log
-
-    // Handle different response formats
-    let content;
-    if (data.choices && data.choices[0] && data.choices[0].message) {
-        content = data.choices[0].message.content;
-    } else if (data.response) {
-        content = data.response;
-    } else if (data.content) {
-        content = data.content;
-    } else if (data.text) {
-        content = data.text;
-    } else if (typeof data === 'string') {
-        content = data;
-    } else {
-        console.error('Unexpected API response format:', data);
-        throw new Error('Unexpected API response format. Please try again.');
-    }
-
-    // Parse JSON from response (handle potential markdown wrapping)
-    let jsonStr = content;
-    if (content.includes('```')) {
-        jsonStr = content.replace(/```json?\n?/g, '').replace(/```/g, '').trim();
-    }
+Important: regretPercentage should reflect likelihood of future regret (lower is better). Be thoughtful and nuanced. Return ONLY valid JSON, no other text.`;
 
     try {
-        return JSON.parse(jsonStr);
-    } catch (parseError) {
-        console.error('Parse error:', parseError, 'Content:', content);
-        throw new Error('Failed to parse AI response. Please try again.');
+        const response = await puter.ai.chat(prompt);
+        console.log('Puter AI Response:', response);
+
+        let content = response;
+
+        // Handle if response is an object with text property
+        if (typeof response === 'object' && response.text) {
+            content = response.text;
+        } else if (typeof response === 'object' && response.message) {
+            content = response.message;
+        }
+
+        // Parse JSON from response (handle potential markdown wrapping)
+        let jsonStr = content;
+        if (typeof content === 'string' && content.includes('```')) {
+            jsonStr = content.replace(/```json?\n?/g, '').replace(/```/g, '').trim();
+        }
+
+        try {
+            return JSON.parse(jsonStr);
+        } catch (parseError) {
+            console.error('Parse error:', parseError, 'Content:', content);
+            throw new Error('Failed to parse AI response. Please try again.');
+        }
+    } catch (error) {
+        console.error('Puter AI error:', error);
+        throw new Error('AI analysis failed. Please try again.');
     }
 }
 

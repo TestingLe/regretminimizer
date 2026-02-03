@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Regret Minimizer | Make Decisions You Won't Regret</title>
-    <meta name="description" content="AI-powered decision making tool that helps you choose the option you'll regret least later, not just what feels best now.">
+    <meta name="description"
+        content="AI-powered decision making tool that helps you choose the option you'll regret least later, not just what feels best now.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://js.puter.com/v2/"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="background-effects">
         <div class="gradient-orb orb-1"></div>
@@ -33,40 +37,27 @@
                     <span class="step-badge">Step 1</span>
                     <h2>Describe Your Decision</h2>
                 </div>
-                
+
                 <form id="decisionForm">
                     <div class="form-group">
                         <label for="situation">What decision are you facing?</label>
-                        <textarea 
-                            id="situation" 
+                        <textarea id="situation"
                             placeholder="e.g., I'm considering whether to leave my stable job to start my own business..."
-                            rows="4"
-                            required
-                        ></textarea>
+                            rows="4" required></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="option1">
                             <span class="option-label">Option A</span>
                         </label>
-                        <input 
-                            type="text" 
-                            id="option1" 
-                            placeholder="e.g., Stay at my current job"
-                            required
-                        >
+                        <input type="text" id="option1" placeholder="e.g., Stay at my current job" required>
                     </div>
 
                     <div class="form-group">
                         <label for="option2">
                             <span class="option-label">Option B</span>
                         </label>
-                        <input 
-                            type="text" 
-                            id="option2" 
-                            placeholder="e.g., Quit and start my business"
-                            required
-                        >
+                        <input type="text" id="option2" placeholder="e.g., Quit and start my business" required>
                     </div>
 
                     <div class="form-group optional-option" id="option3Group">
@@ -74,11 +65,7 @@
                             <span class="option-label">Option C</span>
                             <span class="optional-badge">Optional</span>
                         </label>
-                        <input 
-                            type="text" 
-                            id="option3" 
-                            placeholder="e.g., Start the business part-time first"
-                        >
+                        <input type="text" id="option3" placeholder="e.g., Start the business part-time first">
                     </div>
 
                     <button type="button" class="add-option-btn" id="addOptionBtn">
@@ -130,4 +117,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>
