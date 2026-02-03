@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regret Minimizer | Make Decisions You Won't Regret</title>
+    <meta name="description" content="AI-powered decision making tool that helps you choose the option you'll regret least later, not just what feels best now.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="background-effects">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">⚖️</span>
+                <h1>Regret Minimizer</h1>
+            </div>
+            <p class="tagline">Make decisions you won't regret. Choose for your future self.</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="input-section glass-card" id="inputSection">
+                <div class="section-header">
+                    <span class="step-badge">Step 1</span>
+                    <h2>Describe Your Decision</h2>
+                </div>
+                
+                <form id="decisionForm">
+                    <div class="form-group">
+                        <label for="situation">What decision are you facing?</label>
+                        <textarea 
+                            id="situation" 
+                            placeholder="e.g., I'm considering whether to leave my stable job to start my own business..."
+                            rows="4"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="option1">
+                            <span class="option-label">Option A</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="option1" 
+                            placeholder="e.g., Stay at my current job"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="option2">
+                            <span class="option-label">Option B</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="option2" 
+                            placeholder="e.g., Quit and start my business"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group optional-option" id="option3Group">
+                        <label for="option3">
+                            <span class="option-label">Option C</span>
+                            <span class="optional-badge">Optional</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="option3" 
+                            placeholder="e.g., Start the business part-time first"
+                        >
+                    </div>
+
+                    <button type="button" class="add-option-btn" id="addOptionBtn">
+                        <span class="plus-icon">+</span> Add another option
+                    </button>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span class="btn-text">Analyze My Decision</span>
+                        <span class="btn-icon">→</span>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Loading State -->
+            <section class="loading-section glass-card" id="loadingSection">
+                <div class="loading-content">
+                    <div class="loading-spinner">
+                        <div class="spinner-ring"></div>
+                        <div class="spinner-ring"></div>
+                        <div class="spinner-ring"></div>
+                    </div>
+                    <h3>Analyzing through the lens of regret...</h3>
+                    <p class="loading-tip" id="loadingTip">Considering your future self's perspective</p>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section glass-card" id="resultsSection">
+                <div class="section-header">
+                    <span class="step-badge result-badge">Analysis Complete</span>
+                    <h2>Your Regret Analysis</h2>
+                </div>
+
+                <div class="results-content" id="resultsContent">
+                    <!-- Results will be dynamically inserted here -->
+                </div>
+
+                <button type="button" class="new-decision-btn" id="newDecisionBtn">
+                    <span class="btn-icon">←</span>
+                    <span class="btn-text">Analyze Another Decision</span>
+                </button>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Powered by AI • Inspired by Jeff Bezos' Regret Minimization Framework</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
